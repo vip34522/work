@@ -2,27 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E293B"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:background="@drawable/bg_widget_rounded"
+    android:orientation="vertical">
 
-    <!-- 第一行：日期 -->
-    <TextView
-        android:id="@+id/tv_date"
+    <!-- 1. 标题栏 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="10月26日 星期一 九月十七"
-        android:textColor="#94A3B8"
-        android:textSize="14sp" />
+        android:background="@drawable/bg_header_rounded"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical">
 
-    <!-- 第二行：班次信息 -->
-    <TextView
-        android:id="@+id/tv_shift"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="排班系统"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btn_prev_week"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="◀"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btn_next_week"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:text="▶"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- 2. 横向 7 天排班 -->
+    <LinearLayout
+        android:id="@+id/ll_week_days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="7" />
+        
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E2E8F0"
+        android:layout_marginHorizontal="10dp"/>
+
+    <!-- 3. 本人当天详情 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:text="今天班次: 休"
-        android:textColor="#60A5FA"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_bottom_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10月26日\n星期一"
+            android:textColor="#1E293B"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_bottom_shift"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="今日：休息"
+            android:textColor="#EF4444"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>
