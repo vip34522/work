@@ -2,10 +2,10 @@ package com.example.schedulewidget
 
 import android.content.Context
 import androidx.glance.GlanceId
-import androidx.glance.action.ActionCallback
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.runBlocking
 
