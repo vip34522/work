@@ -34,8 +34,13 @@ class MonthWidget : AppWidgetProvider() {
                     }.time
                     
                     val shift = ShiftCalc.calcShift(data, me, date)
-                    contentText.append("${d}日:${ShiftCalc.shiftShort(shift)}  ")
-                    // 每 5 天换行一次，排版好看点
+                    val shiftStr = ShiftCalc.shiftShort(shift)
+                    
+                    // 格式化：2日:白 4日:休
+                    val dayStr = if (d < 10) " $d" else "$d"
+                    contentText.append("${dayStr}日:${shiftStr}  ")
+                    
+                    // 每 5 天换行一次
                     if (d % 5 == 0) contentText.append("\n")
                 }
             } else {
@@ -43,9 +48,6 @@ class MonthWidget : AppWidgetProvider() {
                 contentText.append("请打开App同步数据")
             }
 
-            views.setTextViewText(R.id.tv_month_title, titleText.toString())
-            
-            // 注意：这里用 tv_month_title 显示所有内容，因为你的 layout 里只有这一个 TextView
             views.setTextViewText(R.id.tv_month_title, titleText.toString() + contentText.toString())
 
             val intent = Intent(context, MainActivity::class.java)
