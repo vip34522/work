@@ -20,7 +20,6 @@ import androidx.glance.background
 class WeekWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            // 没有任何复杂的计算，没有任何从 JSON 取数据，纯写死测试
             Column(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -28,7 +27,7 @@ class WeekWidget : GlanceAppWidget() {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "极简测试：如果你能看到我，说明渲染没问题！",
+                    text = "极简测试：周视图渲染成功！",
                     style = TextStyle(
                         color = ColorProvider(0xFFFFFFFF.toInt()), // 纯白字
                         fontSize = 14.sp
