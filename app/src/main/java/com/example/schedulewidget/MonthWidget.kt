@@ -2,15 +2,33 @@ package com.example.schedulewidget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.glance.*
+import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.action.actionRunCallback
 import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
-import androidx.glance.layout.*
-import androidx.glance.text.*
+import androidx.glance.background
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.fillMaxHeight
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
+import androidx.glance.layout.width
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
+import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.unit.dp
+import androidx.glance.unit.sp
 import org.json.JSONObject
 import java.util.*
 
@@ -65,7 +83,7 @@ fun MonthContent(ctx: Context, model: MonthModel) {
             Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthPrevAction>()).padding(6.dp)) {
                 Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
             }
-            Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
+            Box(modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
                 Text("${model.year}年${model.month}月", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 13.sp, fontWeight = FontWeight.Bold))
             }
             Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthNextAction>()).padding(6.dp)) {
@@ -77,7 +95,9 @@ fun MonthContent(ctx: Context, model: MonthModel) {
         Row(GlanceModifier.fillMaxWidth()) {
             listOf("一", "二", "三", "四", "五", "六", "日").forEachIndexed { i, w ->
                 if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                Box(GlanceModifier.defaultWeight()) { Text(w, modifier = GlanceModifier.fillMaxWidth(), style = TextStyle(color = ColorProvider(0xFF94A3B8.toInt()), fontSize = 9.sp, textAlign = TextAlign.Center)) }
+                Box(GlanceModifier.fillMaxWidth()) { 
+                    Text(w, modifier = GlanceModifier.fillMaxWidth(), style = TextStyle(color = ColorProvider(0xFF94A3B8.toInt()), fontSize = 9.sp, textAlign = TextAlign.Center)) 
+                }
             }
         }
         Spacer(GlanceModifier.height(2.dp))
@@ -85,10 +105,10 @@ fun MonthContent(ctx: Context, model: MonthModel) {
         val rows = model.cells.chunked(7)
         rows.forEachIndexed { ri, row ->
             if (ri > 0) Spacer(GlanceModifier.height(2.dp))
-            Row(GlanceModifier.fillMaxWidth().defaultWeight()) {
+            Row(GlanceModifier.fillMaxWidth()) {
                 row.forEachIndexed { i, cell ->
                     if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                    Box(GlanceModifier.defaultWeight().fillMaxHeight()) {
+                    Box(GlanceModifier.fillMaxWidth().fillMaxHeight()) {
                         if (cell.day != 0) {
                             val bg = if (cell.isToday) ColorProvider(theme.primary) else ColorProvider(cellBg)
                             val dayColor = if (cell.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFFF1F5F9.toInt())
@@ -98,12 +118,12 @@ fun MonthContent(ctx: Context, model: MonthModel) {
                             Column(modifier = GlanceModifier.fillMaxSize().background(bg).padding(1.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                 Row(modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                                     Text("${cell.day}", style = TextStyle(color = dayColor, fontSize = 10.sp, fontWeight = FontWeight.Bold))
-                                    Spacer(GlanceModifier.defaultWeight())
+                                    Spacer(GlanceModifier.width(2.dp))
                                     Text(cell.lunar.take(2), style = TextStyle(color = lunarColor, fontSize = 7.sp))
                                 }
-                                Spacer(GlanceModifier.defaultWeight())
+                                Spacer(GlanceModifier.height(4.dp))
                                 Text(cell.shift, style = TextStyle(color = shiftColor, fontSize = 11.sp, fontWeight = FontWeight.Bold))
-                                Spacer(GlanceModifier.defaultWeight())
+                                Spacer(GlanceModifier.height(4.dp))
                             }
                         }
                     }
