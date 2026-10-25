@@ -6,10 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.action.actionStartActivity
-import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
@@ -90,24 +87,17 @@ fun MonthContent(ctx: Context, model: MonthModel) {
     val cellBg = 0xFF1E293B.toInt()
 
     Column(modifier = GlanceModifier.fillMaxSize().background(ColorProvider(bgColor)).padding(6.dp)) {
+        // 只显示月份标题
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthPrevAction>()).padding(6.dp)) {
-                Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
-            }
-            // 修复：改为 defaultWeight()
-            Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
+            Box(modifier = GlanceModifier.defaultWeight(), contentAlignment = Alignment.Center) {
                 Text("${model.year}年${model.month}月", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 13.sp, fontWeight = FontWeight.Bold))
             }
-            Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthNextAction>()).padding(6.dp)) {
-                Text("▶", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
-            }
         }
-        Spacer(GlanceModifier.height(4.dp))
+        Spacer(GlanceModifier.height(6.dp))
 
         Row(GlanceModifier.fillMaxWidth()) {
             listOf("一", "二", "三", "四", "五", "六", "日").forEachIndexed { i, w ->
                 if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                // 修复：表头改为 defaultWeight()
                 Box(GlanceModifier.defaultWeight()) { 
                     Text(w, modifier = GlanceModifier.fillMaxWidth(), style = TextStyle(color = ColorProvider(0xFF94A3B8.toInt()), fontSize = 9.sp, textAlign = TextAlign.Center)) 
                 }
@@ -121,7 +111,6 @@ fun MonthContent(ctx: Context, model: MonthModel) {
             Row(GlanceModifier.fillMaxWidth()) {
                 row.forEachIndexed { i, cell ->
                     if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                    // 修复：日历格子改为 defaultWeight()
                     Box(GlanceModifier.defaultWeight().fillMaxHeight()) {
                         if (cell.day != 0) {
                             val bg = if (cell.isToday) ColorProvider(theme.primary) else ColorProvider(cellBg)
