@@ -2,14 +2,15 @@ package com.example.schedulewidget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.action.actionRunCallback
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -27,8 +28,6 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.glance.unit.dp
-import androidx.glance.unit.sp
 import org.json.JSONObject
 import java.util.*
 
