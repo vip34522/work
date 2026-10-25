@@ -8,5 +8,5 @@
     android:widgetCategory="home_screen"
     android:updatePeriodMillis="1800000"
     android:previewImage="@drawable/preview_month"
-    android:initialLayout="@layout/glance_default_loading_layout"
+    android:initialLayout="@layout/widget_month"
     android:description="@string/month_widget_desc" />
