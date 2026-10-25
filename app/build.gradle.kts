@@ -34,12 +34,4 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.webkit:webkit:1.12.1")
-    
-    // 使用最稳定的 Glance 版本
-    implementation("androidx.glance:glance-appwidget:1.1.1")
-    
-    // 基础 Compose 支持
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.runtime:runtime")
 }
