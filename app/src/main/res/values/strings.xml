@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">排班系统</string>
+    <string name="week_widget_desc">排班周视图</string>
+    <string name="month_widget_desc">排班月视图</string>
+</resources>
