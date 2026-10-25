@@ -6,13 +6,47 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import java.util.*
 
 class MonthWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.widget_month)
             
-            views.setTextViewText(R.id.tv_month_title, "排班月视图 - 测试成功！")
+            val data = WidgetDataStore.load(context)
+            val me = data?.let { ShiftCalc.getMe(it) }
+            
+            val titleText = StringBuilder()
+            val contentText = StringBuilder()
+
+            if (me != null && data != null) {
+                val cal = Calendar.getInstance()
+                val y = cal.get(Calendar.YEAR)
+                val m = cal.get(Calendar.MONTH) + 1
+                titleText.append("${y}年${m}月 排班\n\n")
+                
+                val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+                for (d in 1..daysInMonth) {
+                    val date = Calendar.getInstance().apply { 
+                        set(Calendar.YEAR, y)
+                        set(Calendar.MONTH, m - 1)
+                        set(Calendar.DAY_OF_MONTH, d)
+                    }.time
+                    
+                    val shift = ShiftCalc.calcShift(data, me, date)
+                    contentText.append("${d}日:${ShiftCalc.shiftShort(shift)}  ")
+                    // 每 5 天换行一次，排版好看点
+                    if (d % 5 == 0) contentText.append("\n")
+                }
+            } else {
+                titleText.append("暂无排班数据")
+                contentText.append("请打开App同步数据")
+            }
+
+            views.setTextViewText(R.id.tv_month_title, titleText.toString())
+            
+            // 注意：这里用 tv_month_title 显示所有内容，因为你的 layout 里只有这一个 TextView
+            views.setTextViewText(R.id.tv_month_title, titleText.toString() + contentText.toString())
 
             val intent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
