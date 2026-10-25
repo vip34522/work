@@ -6,10 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.action.actionStartActivity
-import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
@@ -88,19 +85,13 @@ fun WeekContent(ctx: Context, model: WeekModel) {
     val cellBg = if (theme.isDark) 0xFF1E293B.toInt() else 0xFF334155.toInt()
 
     Column(modifier = GlanceModifier.fillMaxSize().background(ColorProvider(bgColor)).padding(8.dp)) {
+        // 只显示标题，去掉左右按钮
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = GlanceModifier.clickable(actionRunCallback<WeekPrevAction>()).padding(6.dp)) {
-                Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
-            }
-            // 修复：中间标题用 defaultWeight() 撑开，而不是 fillMaxWidth()
-            Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
+            Box(modifier = GlanceModifier.defaultWeight(), contentAlignment = Alignment.Center) {
                 Text(model.title, style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 11.sp, fontWeight = FontWeight.Bold))
             }
-            Box(modifier = GlanceModifier.clickable(actionRunCallback<WeekNextAction>()).padding(6.dp)) {
-                Text("▶", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
-            }
         }
-        Spacer(GlanceModifier.height(4.dp))
+        Spacer(GlanceModifier.height(6.dp))
         
         Row(GlanceModifier.fillMaxWidth()) {
             model.cells.forEachIndexed { i, c ->
@@ -110,7 +101,6 @@ fun WeekContent(ctx: Context, model: WeekModel) {
                 val shiftColor = if (c.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFF60A5FA.toInt())
                 val lunarColor = if (c.isToday) ColorProvider(0xFFFFFFFF.toInt()) else if (c.isHoliday) ColorProvider(0xFFEF4444.toInt()) else ColorProvider(0xFF94A3B8.toInt())
                 
-                // 修复：子项用 defaultWeight() 均分宽度，而不是 fillMaxWidth()
                 Column(modifier = GlanceModifier.defaultWeight().background(bg).padding(vertical = 4.dp, horizontal = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(c.weekName, style = TextStyle(color = if (c.isToday) ColorProvider(0xFFE0E7FF.toInt()) else ColorProvider(0xFF94A3B8.toInt()), fontSize = 8.sp))
                     Text("${c.day}", style = TextStyle(color = dayColor, fontSize = 12.sp, fontWeight = FontWeight.Bold))
