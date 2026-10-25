@@ -7,6 +7,7 @@ import androidx.glance.action.actionRunCallback
 import androidx.glance.action.actionStartActivity
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.layout.*
 import androidx.glance.text.*
 import androidx.glance.unit.ColorProvider
@@ -17,12 +18,14 @@ data class MonthCell(val day: Int, val shift: String, val lunar: String, val isT
 data class MonthModel(val year: Int, val month: Int, val cells: List<MonthCell>)
 
 class MonthWidget : GlanceAppWidget() {
-    override suspend fun provideContent() {
-        val ctx = applicationContext
-        val data = WidgetDataStore.load(ctx)
-        val offset = WidgetDataStore.getMonthOffset(ctx)
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val data = WidgetDataStore.load(context)
+        val offset = WidgetDataStore.getMonthOffset(context)
         val model = buildModel(data, offset)
-        provideContent { MonthContent(ctx, model) }
+        
+        provideContent { 
+            MonthContent(context, model) 
+        }
     }
 
     private fun buildModel(data: JSONObject?, offset: Int): MonthModel {
@@ -53,9 +56,9 @@ class MonthWidget : GlanceAppWidget() {
 
 @Composable
 fun MonthContent(ctx: Context, model: MonthModel) {
-    Val theme = ThemeHelper.get(ctx)
-关于这个问题0xFF0F172A.toInt() else 0xFF1E293B.toInt()
-    Val cellBg = 0xFF1E293B.toInt()
+    val theme = ThemeHelper.get(ctx)
+    val bgColor = if (theme.isDark) 0xFF0F172A.toInt() else 0xFF1E293B.toInt()
+    val cellBg = 0xFF1E293B.toInt()
 
     Column(modifier = GlanceModifier.fillMaxSize().background(ColorProvider(bgColor)).padding(6.dp)) {
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -63,44 +66,44 @@ fun MonthContent(ctx: Context, model: MonthModel) {
                 Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
             }
             Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
-                Text("${model.year}年${model.month}月", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt())，fontSize=13.sp，fontWeight=FontWeight.Bold))
+                Text("${model.year}年${model.month}月", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 13.sp, fontWeight = FontWeight.Bold))
             }
             Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthNextAction>()).padding(6.dp)) {
                 Text("▶", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
             }
         }
-时间: 时间:4(dp))
+        Spacer(GlanceModifier.height(4.dp))
 
         Row(GlanceModifier.fillMaxWidth()) {
-listof("一", "二", "三", "四", "五", "六", "日").forEachIndexed{i，w->
-                如果(i>0) 距离 (,) 视角 (,) 宽度1(dp))
-方块(GlanceModifier.defaultWeight()){文字(w，modifier=GlanceModifier.fillMaxWidth()，style=TextStyle(color=ColorProvider(0xFF94A3B8.toInt())，fontSize=9.sp,textAlign = TextAlign.Center)) } 没有一个字符串.
+            listOf("一", "二", "三", "四", "五", "六", "日").forEachIndexed { i, w ->
+                if (i > 0) Spacer(GlanceModifier.width(1.dp))
+                Box(GlanceModifier.defaultWeight()) { Text(w, modifier = GlanceModifier.fillMaxWidth(), style = TextStyle(color = ColorProvider(0xFF94A3B8.toInt()), fontSize = 9.sp, textAlign = TextAlign.Center)) }
             }
         }
-时间: 时间:2(dp))
+        Spacer(GlanceModifier.height(2.dp))
 
-Val行=model.cells.chunked(7)
-rows.forEachIndexed{ri，row->
-如果(ri>0) 距离 (,) 视角 (,) 高度 (2(dp))
-现在,我们要把它变成一个新的世界.
-row.forEachIndexed{i，cell->
-如果(i>0)距离(，)视角(，)宽度1.dp))
-子的重量和值是不同的.
-如果(cell.day！=0) {
-Val BG=如果(cell.isToday)ColorProvider(主题.主要)elseColorProvider(cellBg)
-Val daycolor=如果(cell.isToday)ColorProvider(0xFFFFFFFF.toInt())elseColorProvider(0xFFF1F5F9.toInt())
-Val shiftColor=如果(cell.isToday)ColorProvider(0xFFFFFFFF.toInt())elseColorProvider(0xFF60A5FA.toInt())
-Val lunarColor=如果(cell.isToday)ColorProvider(0xFFFFFFFF.toInt())else如果(cell.isHoliday)ColorProvider(0xFFEF4444.toInt())elseColorProvider(0xFF94A3B8.toInt())
+        val rows = model.cells.chunked(7)
+        rows.forEachIndexed { ri, row ->
+            if (ri > 0) Spacer(GlanceModifier.height(2.dp))
+            Row(GlanceModifier.fillMaxWidth().defaultWeight()) {
+                row.forEachIndexed { i, cell ->
+                    if (i > 0) Spacer(GlanceModifier.width(1.dp))
+                    Box(GlanceModifier.defaultWeight().fillMaxHeight()) {
+                        if (cell.day != 0) {
+                            val bg = if (cell.isToday) ColorProvider(theme.primary) else ColorProvider(cellBg)
+                            val dayColor = if (cell.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFFF1F5F9.toInt())
+                            val shiftColor = if (cell.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFF60A5FA.toInt())
+                            val lunarColor = if (cell.isToday) ColorProvider(0xFFFFFFFF.toInt()) else if (cell.isHoliday) ColorProvider(0xFFEF4444.toInt()) else ColorProvider(0xFF94A3B8.toInt())
                             
-字体: 字体: 字体:1。DP)，horizontalAlignment=Alignment.CenterHorizontally){
-字符串: 字符串:2。DP)，垂直对齐=对齐。居中垂直){
-文本("${cell.day}"，style=TextStyle(颜色=日色，fontSize=10.sp，fontWeight=FontWeight.Bold))
-垫片(GlanceModifier.defaultWeight())
-文本(cell.lunar.take(2)，style=TextStyle(颜色=lunarColor，fontSize=7.sp))
+                            Column(modifier = GlanceModifier.fillMaxSize().background(bg).padding(1.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                                Row(modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Text("${cell.day}", style = TextStyle(color = dayColor, fontSize = 10.sp, fontWeight = FontWeight.Bold))
+                                    Spacer(GlanceModifier.defaultWeight())
+                                    Text(cell.lunar.take(2), style = TextStyle(color = lunarColor, fontSize = 7.sp))
                                 }
-垫片(GlanceModifier.defaultWeight())
-text(单元格.shift，style=TextStyle(color=shiftColor，fontSize=11.sp，fontWeight=FontWeight.Bold))
-垫片(GlanceModifier.defaultWeight())
+                                Spacer(GlanceModifier.defaultWeight())
+                                Text(cell.shift, style = TextStyle(color = shiftColor, fontSize = 11.sp, fontWeight = FontWeight.Bold))
+                                Spacer(GlanceModifier.defaultWeight())
                             }
                         }
                     }
