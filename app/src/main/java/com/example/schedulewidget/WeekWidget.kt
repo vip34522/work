@@ -2,15 +2,31 @@ package com.example.schedulewidget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.glance.*
+import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.action.actionRunCallback
 import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
-import androidx.glance.layout.*
-import androidx.glance.text.*
+import androidx.glance.background
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
+import androidx.glance.layout.width
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.unit.dp
+import androidx.glance.unit.sp
 import org.json.JSONObject
 import java.util.*
 
@@ -65,7 +81,7 @@ fun WeekContent(ctx: Context, model: WeekModel) {
             Box(modifier = GlanceModifier.clickable(actionRunCallback<WeekPrevAction>()).padding(6.dp)) {
                 Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
             }
-            Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
+            Box(modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
                 Text(model.title, style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 11.sp, fontWeight = FontWeight.Bold))
             }
             Box(modifier = GlanceModifier.clickable(actionRunCallback<WeekNextAction>()).padding(6.dp)) {
@@ -81,7 +97,7 @@ fun WeekContent(ctx: Context, model: WeekModel) {
                 val shiftColor = if (c.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFF60A5FA.toInt())
                 val lunarColor = if (c.isToday) ColorProvider(0xFFFFFFFF.toInt()) else if (c.isHoliday) ColorProvider(0xFFEF4444.toInt()) else ColorProvider(0xFF94A3B8.toInt())
                 
-                Column(modifier = GlanceModifier.defaultWeight().background(bg).padding(vertical = 4.dp, horizontal = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = GlanceModifier.fillMaxWidth().background(bg).padding(vertical = 4.dp, horizontal = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(c.weekName, style = TextStyle(color = if (c.isToday) ColorProvider(0xFFE0E7FF.toInt()) else ColorProvider(0xFF94A3B8.toInt()), fontSize = 8.sp))
                     Text("${c.day}", style = TextStyle(color = dayColor, fontSize = 12.sp, fontWeight = FontWeight.Bold))
                     Text(c.shift, style = TextStyle(color = shiftColor, fontSize = 11.sp, fontWeight = FontWeight.Bold))
