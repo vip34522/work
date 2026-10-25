@@ -1,38 +1,24 @@
 package com.example.schedulewidget
 
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.glance.GlanceId
-import androidx.glance.GlanceModifier
-import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.provideContent
-import androidx.glance.layout.Column
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.padding
-import androidx.glance.text.Text
-import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
-import androidx.glance.background
+import android.content.Intent
+import android.widget.RemoteViews
 
-class MonthWidget : GlanceAppWidget() {
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        provideContent {
-            Column(
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .background(ColorProvider(0xFF0F172A.toInt()))
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "极简测试：月视图渲染成功！",
-                    style = TextStyle(
-                        color = ColorProvider(0xFF34D399.toInt()),
-                        fontSize = 16.sp
-                    )
-                )
-            }
+class MonthWidget : AppWidgetProvider() {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        for (appWidgetId in appWidgetIds) {
+            val views = RemoteViews(context.packageName, R.layout.widget_month)
+            
+            views.setTextViewText(R.id.tv_month_title, "排班月视图 - 测试成功！")
+
+            val intent = Intent(context, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.tv_month_title, pendingIntent)
+
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 }
