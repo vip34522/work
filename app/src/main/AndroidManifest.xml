@@ -15,7 +15,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".WeekWidgetReceiver" android:exported="true">
+        <!-- 这里改成了 .WeekWidget 和 .MonthWidget -->
+        <receiver android:name=".WeekWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -24,7 +25,7 @@
                 android:resource="@xml/week_widget_info" />
         </receiver>
 
-        <receiver android:name=".MonthWidgetReceiver" android:exported="true">
+        <receiver android:name=".MonthWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
