@@ -2,48 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_widget_rounded"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
-    <!-- 顶部绿色标题栏 -->
+    <!-- 顶部标题栏 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_header_rounded"
+        android:background="#22C55E"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="10dp">
-        
+
         <TextView
             android:id="@+id/tv_header_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10月"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tv_header_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="26日\n周一"
+            android:text="26日 周一"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
-            
-        <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
-        
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/btn_prev_week"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:gravity="center"
             android:text="◀"
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
+
         <TextView
             android:id="@+id/btn_next_week"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="8dp"
             android:gravity="center"
             android:text="▶"
@@ -51,83 +57,57 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- 星期表头 -->
+    <!-- 横向 7 个写死的格子 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="8dp"
+        android:padding="6dp"
         android:weightSum="7">
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="日" android:textColor="#64748B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="一" android:textColor="#1E293B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="二" android:textColor="#64748B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="三" android:textColor="#64748B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="四" android:textColor="#64748B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="五" android:textColor="#64748B" android:textSize="11sp"/>
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="六" android:textColor="#64748B" android:textSize="11sp"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d0" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s0" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d1" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d2" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d3" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d4" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s4" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d5" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s5" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:id="@+id/tv_w6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="10sp" android:textColor="#64748B" />
+            <TextView android:id="@+id/tv_d6" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:textSize="14sp" android:textColor="#1E293B" android:textStyle="bold" />
+            <TextView android:id="@+id/tv_s6" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:textColor="#FFFFFF" android:textSize="10sp" />
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!-- ⚠️ 关键点：不用 include，而是把 7 个格子的 ID 全部写死区分开 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp"
-        android:weightSum="7">
-        
-        <!-- 第 0 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d0" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s0" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 1 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d1" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 2 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d2" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 3 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d3" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 4 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d4" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s4" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 5 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d5" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s5" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-
-        <!-- 第 6 天 -->
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:padding="2dp">
-            <TextView android:id="@+id/tv_w6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="一" android:textColor="#64748B" android:textSize="10sp" />
-            <TextView android:id="@+id/tv_d6" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginTop="2dp" android:gravity="center" android:text="26" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
-            <TextView android:id="@+id/tv_s6" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginTop="2dp" android:gravity="center" android:paddingVertical="2dp" android:text="休" android:textColor="#FFFFFF" android:textSize="10sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginHorizontal="12dp" android:background="#F1F5F9"/>
 
     <!-- 底部详情 -->
     <LinearLayout
