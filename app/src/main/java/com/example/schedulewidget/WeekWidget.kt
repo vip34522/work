@@ -7,6 +7,7 @@ import androidx.glance.action.actionRunCallback
 import androidx.glance.action.actionStartActivity
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.layout.*
 import androidx.glance.text.*
 import androidx.glance.unit.ColorProvider
@@ -17,12 +18,14 @@ data class WeekDayCell(val weekName: String, val day: Int, val shift: String, va
 data class WeekModel(val title: String, val cells: List<WeekDayCell>)
 
 class WeekWidget : GlanceAppWidget() {
-    override suspend fun provideContent() {
-        val ctx = applicationContext
-        val data = WidgetDataStore.load(ctx)
-        val offset = WidgetDataStore.getWeekOffset(ctx)
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val data = WidgetDataStore.load(context)
+        val offset = WidgetDataStore.getWeekOffset(context)
         val model = buildModel(data, offset)
-        provideContent { WeekContent(ctx, model) }
+        
+        provideContent { 
+            WeekContent(context, model) 
+        }
     }
 
     private fun buildModel(data: JSONObject?, offset: Int): WeekModel {
