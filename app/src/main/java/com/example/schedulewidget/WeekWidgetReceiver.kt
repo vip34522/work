@@ -6,6 +6,7 @@ import androidx.glance.action.ActionCallback
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.runBlocking
 
 class WeekWidgetReceiver : GlanceAppWidgetReceiver() {
