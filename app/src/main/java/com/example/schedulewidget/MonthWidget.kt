@@ -36,12 +36,24 @@ data class MonthModel(val year: Int, val month: Int, val cells: List<MonthCell>)
 
 class MonthWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val data = WidgetDataStore.load(context)
-        val offset = WidgetDataStore.getMonthOffset(context)
-        val model = buildModel(data, offset)
-        
+        var errorMsg: String? = null
+        var model: MonthModel? = null
+        try {
+            val data = WidgetDataStore.load(context)
+            val offset = WidgetDataStore.getMonthOffset(context)
+            model = buildModel(data, offset)
+        } catch (e: Exception) {
+            errorMsg = e.message
+        }
+
         provideContent { 
-            MonthContent(context, model) 
+            if (errorMsg != null) {
+                Text("错误: $errorMsg", style = TextStyle(color = ColorProvider(0xFFEF4444.toInt())))
+            } else if (model != null) {
+                MonthContent(context, model) 
+            } else {
+                Text("无数据", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt())))
+            }
         }
     }
 
@@ -82,7 +94,8 @@ fun MonthContent(ctx: Context, model: MonthModel) {
             Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthPrevAction>()).padding(6.dp)) {
                 Text("◀", style = TextStyle(color = ColorProvider(theme.primary), fontSize = 12.sp))
             }
-            Box(modifier = GlanceModifier.fillMaxWidth().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
+            // 修复：改为 defaultWeight()
+            Box(modifier = GlanceModifier.defaultWeight().clickable(actionStartActivity<MainActivity>()), contentAlignment = Alignment.Center) {
                 Text("${model.year}年${model.month}月", style = TextStyle(color = ColorProvider(0xFFF1F5F9.toInt()), fontSize = 13.sp, fontWeight = FontWeight.Bold))
             }
             Box(modifier = GlanceModifier.clickable(actionRunCallback<MonthNextAction>()).padding(6.dp)) {
@@ -94,7 +107,8 @@ fun MonthContent(ctx: Context, model: MonthModel) {
         Row(GlanceModifier.fillMaxWidth()) {
             listOf("一", "二", "三", "四", "五", "六", "日").forEachIndexed { i, w ->
                 if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                Box(GlanceModifier.fillMaxWidth()) { 
+                // 修复：表头改为 defaultWeight()
+                Box(GlanceModifier.defaultWeight()) { 
                     Text(w, modifier = GlanceModifier.fillMaxWidth(), style = TextStyle(color = ColorProvider(0xFF94A3B8.toInt()), fontSize = 9.sp, textAlign = TextAlign.Center)) 
                 }
             }
@@ -107,7 +121,8 @@ fun MonthContent(ctx: Context, model: MonthModel) {
             Row(GlanceModifier.fillMaxWidth()) {
                 row.forEachIndexed { i, cell ->
                     if (i > 0) Spacer(GlanceModifier.width(1.dp))
-                    Box(GlanceModifier.fillMaxWidth().fillMaxHeight()) {
+                    // 修复：日历格子改为 defaultWeight()
+                    Box(GlanceModifier.defaultWeight().fillMaxHeight()) {
                         if (cell.day != 0) {
                             val bg = if (cell.isToday) ColorProvider(theme.primary) else ColorProvider(cellBg)
                             val dayColor = if (cell.isToday) ColorProvider(0xFFFFFFFF.toInt()) else ColorProvider(0xFFF1F5F9.toInt())
