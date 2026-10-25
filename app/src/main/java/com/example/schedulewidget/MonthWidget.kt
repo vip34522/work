@@ -26,7 +26,7 @@ class MonthWidget : GlanceAppWidget() {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "月视图测试：渲染成功",
+                    text = "极简测试：月视图渲染成功！",
                     style = TextStyle(
                         color = ColorProvider(0xFF34D399.toInt()),
                         fontSize = 16.sp
