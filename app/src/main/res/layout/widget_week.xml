@@ -2,92 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
-    android:orientation="horizontal"
+    android:background="#1E293B"
+    android:orientation="vertical"
     android:padding="12dp">
 
-    <!-- 左侧：日期信息区 -->
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <!-- 第一行：日期 -->
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="10月26日 星期一 九月十七"
+        android:textColor="#94A3B8"
+        android:textSize="14sp" />
+
+    <!-- 第二行：班次信息 -->
+    <TextView
+        android:id="@+id/tv_shift"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:background="#EFF6FF"
-        android:orientation="vertical"
         android:gravity="center_vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/tv_date_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10月26日"
-            android:textColor="#2563EB"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_date_week"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="星期一"
-            android:textColor="#475569"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_date_lunar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="九月十七"
-            android:textColor="#475569"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <!-- 右侧：本人信息区 -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <!-- 部门/班种信息 -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="本人"
-                android:background="#2563EB"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:padding="2dp" />
-
-            <TextView
-                android:id="@+id/tv_person_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="四班三倒 · 丁组"
-                android:textColor="#475569"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <!-- 大色块班次 -->
-        <TextView
-            android:id="@+id/tv_shift_big"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="#1E293B"
-            android:gravity="center"
-            android:text="二"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:text="今天班次: 休"
+        android:textColor="#60A5FA"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 </LinearLayout>
