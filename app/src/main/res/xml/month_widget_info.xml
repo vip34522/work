@@ -7,6 +7,6 @@
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:updatePeriodMillis="1800000"
-    android:previewImage="@drawable/ic_launcher"
+    android:previewImage="@drawable/preview_month"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:description="@string/month_widget_desc" />
