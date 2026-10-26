@@ -46,10 +46,12 @@ class MonthWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            val heightPx = (minHeight * density).toInt()
+            // 减去顶部 72dp
+            var heightPx = ((minHeight - 72) * density).toInt()
+            if (heightPx < 10) heightPx = 10
 
             try {
-                val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+                val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, data, me, offset)
                 views.setImageViewBitmap(R.id.iv_month_canvas, bitmap)
             } catch (e: Exception) {
                 val empty = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
