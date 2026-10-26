@@ -18,7 +18,7 @@ class WeekWidget : AppWidgetProvider() {
             WidgetDataStore.addWeekOffset(context, 1)
             updateAll(context)
         } else if (intent.action == "ACTION_WEEK_TODAY") {
-            WidgetDataStore.setWeekOffset(context, 0) // 重置为 0
+            WidgetDataStore.setWeekOffset(context, 0)
             updateAll(context)
         }
     }
@@ -46,10 +46,12 @@ class WeekWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            val heightPx = (minHeight * density).toInt()
+            // 关键：减去顶部 72dp 占用的高度，剩下的才是给图片的
+            var heightPx = ((minHeight - 72) * density).toInt()
+            if (heightPx < 10) heightPx = 10
 
             try {
-                val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+                val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, data, me, offset)
                 views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
             } catch (e: Exception) {
                 val empty = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
