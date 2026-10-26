@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.widget.RemoteViews
 
 class WeekWidget : AppWidgetProvider() {
@@ -34,20 +33,17 @@ class WeekWidget : AppWidgetProvider() {
             val me = data?.let { ShiftCalc.getMe(it) }
             val offset = WidgetDataStore.getWeekOffset(context)
             
-            // 获取组件在桌面上实际占据的宽高(dp)
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
             var minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
             var minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
             
-            // 如果系统没返回准确宽高，给个兜底值
             if (minWidth <= 0) minWidth = 250
             if (minHeight <= 0) minHeight = 150
 
-            // 转换为像素进行绘制（乘上屏幕密度，保证清晰度）
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 扣掉顶部蓝条占用的高度（大约 48dp），剩下的给画图
-            val heightPx = ((minHeight - 48) * density).toInt()
+            // 这里由 48 改为 36，因为蓝条变窄了
+            val heightPx = ((minHeight - 36) * density).toInt()
 
             val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, data, me, offset)
 
