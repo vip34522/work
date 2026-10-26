@@ -19,10 +19,11 @@ object WeekBitmapGenerator {
         val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER }
         val rectF = RectF()
 
-        // 去除左右留白，直接平分 7 份
-        val cellWidth = width / 7f
-        // 日历区域占高度的 45%（根据实际高度动态算）
-        val topSectionHeight = height * 0.45f
+        val wFloat = width.toFloat()
+        val hFloat = height.toFloat()
+
+        val cellWidth = wFloat / 7f
+        val topSectionHeight = hFloat * 0.45f
 
         // ================= 1. 画 7 天排班 =================
         for (i in 0 until 7) {
@@ -32,45 +33,37 @@ object WeekBitmapGenerator {
             
             val shift = if (data != null && me != null) ShiftCalc.calcShift(data, me, d) else null
             val shiftStr = ShiftCalc.shiftShort(shift)
-            val shiftColor = when(shiftStr) {
-                "休" -> "#EF4444"
-                "白" -> "#3B82F6"
-                "夜" -> "#1E293B"
-                "二" -> "#0EA5E9"
-                else -> "#10B981"
-            }
+            val shiftColor = getShiftColor(shiftStr)
 
-            val centerX = cellWidth * i + cellWidth / 2
-            // 垂直居中留出一点边距
-            val startY = (topSectionHeight - 110f) / 2 
+            val centerX = cellWidth * i.toFloat() + cellWidth / 2f
+            val startY = (topSectionHeight - 110f) / 2f 
 
-            // 如果今天是当前格子，画蓝色高亮外框
             if (isToday) {
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.color = Color.parseColor("#2563EB")
-                rectF.set(cellWidth * i + 4f, startY - 5f, cellWidth * (i + 1) - 4f, startY + 105f)
+                rectF.set(cellWidth * i.toFloat() + 4f, startY - 5f, cellWidth * (i + 1).toFloat() - 4f, startY + 105f)
                 canvas.drawRoundRect(rectF, 12f, 12f, paint)
             }
 
-            // 画星期 (字号根据宽度自适应)
+            // 画星期
             textPaint.color = Color.parseColor(if (isToday) "#2563EB" else "#64748B")
-            textPaint.textSize = width / 20f
+            textPaint.textSize = wFloat / 20f
             textPaint.isFakeBoldText = isToday
             canvas.drawText("周${weekNames[i]}", centerX, startY + 15f, textPaint)
 
             // 画日期
             textPaint.color = Color.parseColor("#1E293B")
-            textPaint.textSize = width / 15f
+            textPaint.textSize = wFloat / 15f
             textPaint.isFakeBoldText = true
             canvas.drawText(c.get(Calendar.DAY_OF_MONTH).toString(), centerX, startY + 50f, textPaint)
 
             // 画班次小标签
             val rectWidth = cellWidth * 0.8f
             val rectHeight = 32f
-            val rectLeft = centerX - rectWidth / 2
+            val rectLeft = centerX - rectWidth / 2f
             val rectTop = startY + 65f
-            val rectRight = centerX + rectWidth / 2
+            val rectRight = centerX + rectWidth / 2f
             val rectBottom = rectTop + rectHeight
 
             paint.style = Paint.Style.FILL
@@ -79,35 +72,35 @@ object WeekBitmapGenerator {
             canvas.drawRoundRect(rectF, 10f, 10f, paint)
 
             textPaint.color = Color.WHITE
-            textPaint.textSize = width / 25f
+            textPaint.textSize = wFloat / 25f
             textPaint.isFakeBoldText = false
-            val textY = rectTop + (rectHeight / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)
+            val textY = rectTop + (rectHeight / 2f) - ((textPaint.descent() + textPaint.ascent()) / 2f)
             canvas.drawText(shiftStr, centerX, textY, textPaint)
         }
 
         // ================= 2. 画中间蓝色分割线 =================
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#5C8DF6")
-        canvas.drawRect(0f, topSectionHeight, width, topSectionHeight + 3f, paint)
+        canvas.drawRect(0f, topSectionHeight, wFloat, topSectionHeight + 3f, paint)
 
         // ================= 3. 画底部详情 =================
         val bottomStartY = topSectionHeight + 3f
-        val bottomHeight = height - bottomStartY
-        val bottomCenterY = bottomStartY + bottomHeight / 2
+        val bottomHeight = hFloat - bottomStartY
+        val bottomCenterY = bottomStartY + bottomHeight / 2f
 
-        val leftColWidth = width * 0.3f // 左侧占 30%
-        val leftCenterX = leftColWidth / 2
+        val leftColWidth = wFloat * 0.3f 
+        val leftCenterX = leftColWidth / 2f
 
-        // 3.1 左侧日期 (加大字号)
+        // 3.1 左侧日期
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.color = Color.parseColor("#1E293B")
         textPaint.isFakeBoldText = true
-        textPaint.textSize = width / 14f // 字号变大
+        textPaint.textSize = wFloat / 14f 
         val dateStr = "${Calendar.getInstance().get(Calendar.MONTH) + 1}月${Calendar.getInstance().get(Calendar.DAY_OF_MONTH)}日"
         canvas.drawText(dateStr, leftCenterX, bottomCenterY - 20f, textPaint)
         
         // 农历与星期
-        textPaint.textSize = width / 22f
+        textPaint.textSize = wFloat / 22f
         textPaint.color = Color.parseColor("#64748B")
         textPaint.isFakeBoldText = false
         val lunar = LunarCalc.lunarShort(today)
@@ -117,16 +110,15 @@ object WeekBitmapGenerator {
         // 3.2 中间灰色竖线
         paint.color = Color.parseColor("#CBD5E1")
         paint.strokeWidth = 2f
-        canvas.drawLine(leftColWidth, bottomStartY + 10f, leftColWidth, height - 10f, paint)
+        canvas.drawLine(leftColWidth, bottomStartY + 10f, leftColWidth, hFloat - 10f, paint)
 
-        // 3.3 右侧人员列表 (加大字号，垂直居中)
+        // 3.3 右侧人员列表（带班次标签）
         val listStartX = leftColWidth + 15f
         val personsToShow = getTodayPersons(data)
         
-        val showCount = Math.min(personsToShow.size, 3) // 最多显示3个，防止拥挤
-        var listY = bottomCenterY - (showCount * 40f) / 2 + 10f
+        val showCount = Math.min(personsToShow.size, 3) 
+        var listY = bottomCenterY - (showCount * 40f) / 2f + 10f
 
-        textPaint.textAlign = Paint.Align.LEFT
         var count = 0
         for (p in personsToShow) {
             if (count >= 3) break
@@ -136,29 +128,64 @@ object WeekBitmapGenerator {
             val shiftStr = ShiftCalc.shiftShort(shift)
             val typeName = getTypeName(data, p.optString("shiftTypeId"))
             
-            // 画名字 (放大)
+            // 1. 画姓名
+            textPaint.textAlign = Paint.Align.LEFT
             textPaint.color = Color.parseColor("#2563EB")
-            textPaint.textSize = width / 18f
+            textPaint.textSize = wFloat / 18f
             textPaint.isFakeBoldText = true
             canvas.drawText(pName, listStartX, listY, textPaint)
             
-            // 画班种和班次 (放大)
+            // 2. 画班种（灰色）
             textPaint.color = Color.parseColor("#64748B")
             textPaint.isFakeBoldText = false
-            textPaint.textSize = width / 22f
-            canvas.drawText("$typeName $shiftStr", listStartX + 100f, listY, textPaint)
+            textPaint.textSize = wFloat / 22f
+            val typeX = listStartX + (wFloat / 7.5f) // 控制班种的起始位置
+            canvas.drawText(typeName, typeX, listY, textPaint)
+            
+            // 3. 画班次小色块
+            val shiftColor = getShiftColor(shiftStr)
+            val badgeWidth = wFloat / 12f
+            val badgeHeight = 24f
+            val badgeLeft = typeX + (wFloat / 8f) // 色块紧跟班种
+            val badgeTop = listY - badgeHeight + 6f
+            val badgeRight = badgeLeft + badgeWidth
+            val badgeBottom = listY + 6f
+            
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor(shiftColor)
+            rectF.set(badgeLeft, badgeTop, badgeRight, badgeBottom)
+            canvas.drawRoundRect(rectF, 8f, 8f, paint)
+            
+            // 色块里的文字
+            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.color = Color.WHITE
+            textPaint.textSize = wFloat / 24f
+            val textCenterX = badgeLeft + badgeWidth / 2f
+            val textCenterY = badgeTop + (badgeHeight / 2f) - ((textPaint.descent() + textPaint.ascent()) / 2f)
+            canvas.drawText(shiftStr, textCenterX, textCenterY, textPaint)
             
             listY += 40f
             count++
         }
         
-        // 更多
         if (personsToShow.size > 3) {
+            textPaint.textAlign = Paint.Align.LEFT
             textPaint.color = Color.parseColor("#94A3B8")
-            canvas.drawText("...", listStartX + 100f, listY, textPaint)
+            canvas.drawText("...", listStartX, listY, textPaint)
         }
 
         return bitmap
+    }
+
+    // 提取了统一的颜色获取方法
+    private fun getShiftColor(shiftStr: String): String {
+        return when(shiftStr) {
+            "休" -> "#EF4444"
+            "白" -> "#3B82F6"
+            "夜" -> "#1E293B"
+            "二" -> "#0EA5E9"
+            else -> "#10B981"
+        }
     }
 
     private fun getTypeName(data: JSONObject, typeId: String): String {
