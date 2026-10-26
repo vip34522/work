@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/btn_prev_week"
+            android:id="@+id/btn_prev_month"
             android:layout_width="56dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_btn_trans"
@@ -23,7 +23,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/btn_today_week"
+            android:id="@+id/btn_today_month"
             android:layout_width="76dp"
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
@@ -36,7 +36,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btn_next_week"
+            android:id="@+id/btn_next_month"
             android:layout_width="56dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_btn_trans"
@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/iv_week_canvas"
+        android:id="@+id/iv_month_canvas"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
