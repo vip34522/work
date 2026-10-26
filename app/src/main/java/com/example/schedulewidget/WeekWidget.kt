@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.widget.RemoteViews
 
 class WeekWidget : AppWidgetProvider() {
@@ -44,12 +45,15 @@ class WeekWidget : AppWidgetProvider() {
             val widthPx = (minWidth * density).toInt()
             val heightPx = (minHeight * density).toInt()
 
-            // 这里传入“排班系统”文字，以后想改直接在引号里改即可
-            val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+            try {
+                val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+                views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
+            } catch (e: Exception) {
+                // 如果画图崩溃，显示一张纯白图片兜底，防止白圈
+                val empty = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
+                views.setImageViewBitmap(R.id.iv_week_canvas, empty)
+            }
 
-            views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
-
-            // 交互
             val prevIntent = Intent(context, WeekWidget::class.java).apply { action = "ACTION_WEEK_PREV" }
             val prevPending = PendingIntent.getBroadcast(context, 1, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.btn_prev_week, prevPending)
@@ -60,8 +64,6 @@ class WeekWidget : AppWidgetProvider() {
 
             val openIntent = Intent(context, MainActivity::class.java)
             val openPending = PendingIntent.getActivity(context, 3, openIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            
-            // 点击画布打开 App (删除了 tv_header 的点击绑定)
             views.setOnClickPendingIntent(R.id.iv_week_canvas, openPending)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
