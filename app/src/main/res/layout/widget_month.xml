@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:background="@drawable/bg_widget_rounded"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@drawable/bg_header_rounded"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_prev_month"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_trans"
+            android:gravity="center"
+            android:text="◀"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/btn_today_month"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_btn_trans"
+            android:gravity="center"
+            android:text="今天"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btn_next_month"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_trans"
+            android:gravity="center"
+            android:text="▶"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_month_canvas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scaleType="fitXY" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="end|center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp">
-
-        <TextView
-            android:id="@+id/btn_prev_month"
-            android:layout_width="48dp"
-            android:layout_height="60dp" />
-
-        <TextView
-            android:id="@+id/btn_today_month"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="4dp" />
-
-        <TextView
-            android:id="@+id/btn_next_month"
-            android:layout_width="48dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="4dp" />
-    </LinearLayout>
-</FrameLayout>
+</LinearLayout>
