@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="【排班系统】"
+            android:text="排班系统"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -43,10 +43,10 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <!-- 画图区域 -->
+    <!-- 画图区域，改成 fitCenter -->
     <ImageView
         android:id="@+id/iv_week_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
 </LinearLayout>
