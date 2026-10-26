@@ -6,53 +6,61 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import java.util.*
 
 class MonthWidget : AppWidgetProvider() {
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == "ACTION_MONTH_PREV") {
+            WidgetDataStore.addMonthOffset(context, -1)
+            updateAll(context)
+        } else if (intent.action == "ACTION_MONTH_NEXT") {
+            WidgetDataStore.addMonthOffset(context, 1)
+            updateAll(context)
+        }
+    }
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        updateAll(context)
+    }
+
+    private fun updateAll(context: Context) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(android.content.ComponentName(context, MonthWidget::class.java))
+        
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.widget_month)
-            
             val data = WidgetDataStore.load(context)
             val me = data?.let { ShiftCalc.getMe(it) }
+            val offset = WidgetDataStore.getMonthOffset(context)
             
-            val titleText = StringBuilder()
-            val contentText = StringBuilder()
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            var minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+            var minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+            
+            if (minWidth <= 0) minWidth = 300
+            if (minHeight <= 0) minHeight = 300
 
-            if (me != null && data != null) {
-                val cal = Calendar.getInstance()
-                val y = cal.get(Calendar.YEAR)
-                val m = cal.get(Calendar.MONTH) + 1
-                titleText.append("${y}年${m}月 排班\n\n")
-                
-                val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-                for (d in 1..daysInMonth) {
-                    val date = Calendar.getInstance().apply { 
-                        set(Calendar.YEAR, y)
-                        set(Calendar.MONTH, m - 1)
-                        set(Calendar.DAY_OF_MONTH, d)
-                    }.time
-                    
-                    val shift = ShiftCalc.calcShift(data, me, date)
-                    val shiftStr = ShiftCalc.shiftShort(shift)
-                    
-                    // 格式化：2日:白 4日:休
-                    val dayStr = if (d < 10) " $d" else "$d"
-                    contentText.append("${dayStr}日:${shiftStr}  ")
-                    
-                    // 每 5 天换行一次
-                    if (d % 5 == 0) contentText.append("\n")
-                }
-            } else {
-                titleText.append("暂无排班数据")
-                contentText.append("请打开App同步数据")
-            }
+            val density = context.resources.displayMetrics.density
+            val widthPx = (minWidth * density).toInt()
+            val heightPx = (minHeight * density).toInt()
 
-            views.setTextViewText(R.id.tv_month_title, titleText.toString() + contentText.toString())
+            // 传入了"排班系统"文字，以后想改直接改这
+            val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, "排班系统", data, me, offset)
 
-            val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            views.setOnClickPendingIntent(R.id.tv_month_title, pendingIntent)
+            views.setImageViewBitmap(R.id.iv_month_canvas, bitmap)
+
+            // 翻页交互
+            val prevIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_PREV" }
+            val prevPending = PendingIntent.getBroadcast(context, 11, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.btn_prev_month, prevPending)
+
+            val nextIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_NEXT" }
+            val nextPending = PendingIntent.getBroadcast(context, 12, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.btn_next_month, nextPending)
+
+            val openIntent = Intent(context, MainActivity::class.java)
+            val openPending = PendingIntent.getActivity(context, 13, openIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.iv_month_canvas, openPending)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
