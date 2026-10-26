@@ -59,9 +59,16 @@ object LunarCalc {
     private val LM = arrayOf("正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "冬", "腊")
     private val LD = arrayOf("初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十")
 
+    // 简写版
     fun lunarShort(date: Date): String {
         val l = solarToLunar(date)
         return if (l.day == 1) (if (l.isLeap) "闰" else "") + LM[l.month - 1] + "月" else LD[l.day - 1]
+    }
+
+    // 新增：完整版
+    fun lunarFull(date: Date): String {
+        val l = solarToLunar(date)
+        return (if (l.isLeap) "闰" else "") + LM[l.month - 1] + "月" + LD[l.day - 1]
     }
 
     private val FIXED_HOLIDAYS = mapOf("1-1" to "元旦", "2-14" to "情人节", "3-8" to "妇女节", "3-12" to "植树节", "4-1" to "愚人节", "5-1" to "劳动节", "5-4" to "青年节", "6-1" to "儿童节", "7-1" to "建党节", "8-1" to "建军节", "9-10" to "教师节", "10-1" to "国庆节", "12-24" to "平安夜", "12-25" to "圣诞节")
