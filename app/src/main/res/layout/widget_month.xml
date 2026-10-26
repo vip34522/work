@@ -7,47 +7,47 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:background="@drawable/bg_header_rounded"
         android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/btn_prev_month"
-            android:layout_width="60dp"
-            android:layout_height="48dp"
+            android:id="@+id/btn_prev_week"
+            android:layout_width="56dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_btn_trans"
             android:gravity="center"
             android:text="◀"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/btn_today_month"
-            android:layout_width="80dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:id="@+id/btn_today_week"
+            android:layout_width="76dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/bg_btn_trans"
             android:gravity="center"
             android:text="今天"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btn_next_month"
-            android:layout_width="60dp"
-            android:layout_height="48dp"
+            android:id="@+id/btn_next_week"
+            android:layout_width="56dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_btn_trans"
             android:gravity="center"
             android:text="▶"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/iv_month_canvas"
+        android:id="@+id/iv_week_canvas"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
