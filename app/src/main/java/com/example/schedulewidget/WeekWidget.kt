@@ -46,8 +46,8 @@ class WeekWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 关键：减去顶部 72dp 占用的高度，剩下的才是给图片的
-            var heightPx = ((minHeight - 72) * density).toInt()
+            // 关键：减去顶部 56dp 占用的高度，剩下的才是给图片的
+            var heightPx = ((minHeight - 56) * density).toInt()
             if (heightPx < 10) heightPx = 10
 
             try {
