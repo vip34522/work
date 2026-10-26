@@ -33,12 +33,11 @@ class WeekWidget : AppWidgetProvider() {
             val me = data?.let { ShiftCalc.getMe(it) }
             val offset = WidgetDataStore.getWeekOffset(context)
             
-            // 根据屏幕密度动态计算一个合适的宽高，高度调大以容纳底部详情
+            // 保证宽高比 3:2，避免缩放变形，增加清晰度
             val density = context.resources.displayMetrics.density
-            val widthPx = (350 * density).toInt()
-            val heightPx = (200 * density).toInt() // 这里加高了一点
+            val widthPx = (360 * density).toInt()
+            val heightPx = (240 * density).toInt() 
 
-            // 画图
             val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, data, me, offset)
 
             views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
