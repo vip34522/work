@@ -46,8 +46,8 @@ class MonthWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 减去顶部 72dp
-            var heightPx = ((minHeight - 72) * density).toInt()
+            // 减去顶部 56dp
+            var heightPx = ((minHeight - 56) * density).toInt()
             if (heightPx < 10) heightPx = 10
 
             try {
