@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.widget.RemoteViews
 
 class MonthWidget : AppWidgetProvider() {
@@ -44,12 +45,14 @@ class MonthWidget : AppWidgetProvider() {
             val widthPx = (minWidth * density).toInt()
             val heightPx = (minHeight * density).toInt()
 
-            // 传入了"排班系统"文字，以后想改直接改这
-            val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+            try {
+                val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+                views.setImageViewBitmap(R.id.iv_month_canvas, bitmap)
+            } catch (e: Exception) {
+                val empty = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
+                views.setImageViewBitmap(R.id.iv_month_canvas, empty)
+            }
 
-            views.setImageViewBitmap(R.id.iv_month_canvas, bitmap)
-
-            // 翻页交互
             val prevIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_PREV" }
             val prevPending = PendingIntent.getBroadcast(context, 11, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.btn_prev_month, prevPending)
