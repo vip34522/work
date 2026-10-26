@@ -22,7 +22,8 @@ object WeekBitmapGenerator {
         val h = height.toFloat()
         val radius = 20f
         val borderW = 4f
-        val headerH = Math.min(h * 0.2f, 80f)
+        // 【修改】顶部栏加高：占高度的 25%，且不低于 70f
+        val headerH = Math.max(h * 0.25f, 70f)
         val paddingX = w * 0.05f
 
         fun getCenteredY(centerY: Float, paint: Paint): Float {
@@ -45,23 +46,23 @@ object WeekBitmapGenerator {
         paint.color = Color.parseColor("#5C8DF6")
         canvas.drawRoundRect(borderW/2, borderW/2, w - borderW/2, h - borderW/2, radius, radius, paint)
 
-        // 2. 画顶部文字与按钮图标
+        // 2. 画顶部文字与按钮
         textPaint.color = Color.WHITE
-        textPaint.textSize = headerH * 0.35f
+        textPaint.textSize = headerH * 0.35f // 标题字体加大
         textPaint.isFakeBoldText = true
         textPaint.textAlign = Paint.Align.LEFT
         canvas.drawText(title, paddingX, getCenteredY(headerH / 2f, textPaint), textPaint)
 
-        // 画右侧箭头图标（占位，真正点击在 XML）
-        val iconSize = headerH * 0.4f
+        // 【修改】箭头图标加大
+        val iconSize = headerH * 0.45f
         val iconY = headerH / 2f
-        // 右箭头
+        val gap = 10f
+        
         val nextX = w - paddingX - iconSize / 2f
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#40FFFFFF")
         rectF.set(nextX - iconSize/2f, iconY - iconSize/2f, nextX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 8f, 8f, paint)
-        // 绘制箭头路径
+        canvas.drawRoundRect(rectF, 10f, 10f, paint)
         val nextPath = Path().apply {
             moveTo(nextX - iconSize*0.15f, iconY - iconSize*0.2f)
             lineTo(nextX + iconSize*0.15f, iconY)
@@ -71,11 +72,10 @@ object WeekBitmapGenerator {
         paint.color = Color.WHITE
         canvas.drawPath(nextPath, paint)
 
-        // 左箭头
-        val prevX = nextX - iconSize * 1.5f
+        val prevX = nextX - iconSize - gap
         paint.color = Color.parseColor("#40FFFFFF")
         rectF.set(prevX - iconSize/2f, iconY - iconSize/2f, prevX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 8f, 8f, paint)
+        canvas.drawRoundRect(rectF, 10f, 10f, paint)
         val prevPath = Path().apply {
             moveTo(prevX + iconSize*0.15f, iconY - iconSize*0.2f)
             lineTo(prevX - iconSize*0.15f, iconY)
@@ -85,8 +85,8 @@ object WeekBitmapGenerator {
         paint.color = Color.WHITE
         canvas.drawPath(prevPath, paint)
 
-        // 3. 画日历区
-        val topH = headerH + (h - headerH) * 0.45f
+        // 3. 画日历区 (高度会相应减小)
+        val topH = headerH + (h - headerH) * 0.48f
         val contentW = w - paddingX * 2
         val cellW = contentW / 7f
         val areaH = topH - headerH
@@ -123,7 +123,7 @@ object WeekBitmapGenerator {
             canvas.drawText(c.get(Calendar.DAY_OF_MONTH).toString(), centerX, getCenteredY(line2Y, textPaint), textPaint)
 
             val rectW = cellW * 0.8f
-            val rectH = Math.min(areaH * 0.2f, 38f)
+            val rectH = Math.min(areaH * 0.25f, 38f)
             rectF.set(centerX - rectW / 2f, line3Y - rectH / 2f, centerX + rectW / 2f, line3Y + rectH / 2f)
             paint.style = Paint.Style.FILL
             paint.color = Color.parseColor(shiftColor)
@@ -222,7 +222,7 @@ object WeekBitmapGenerator {
         }
         return bitmap
     }
-    // ... getShiftColor, getTypeName, getTodayPersons 保持不变
+
     private fun getShiftColor(shiftStr: String): String = when(shiftStr) { "休" -> "#EF4444"; "白" -> "#3B82F6"; "夜" -> "#1E293B"; "二" -> "#0EA5E9"; else -> "#10B981" }
     private fun getTypeName(data: JSONObject, typeId: String): String {
         val types = data.optJSONArray("shiftTypes") ?: return "排班"
