@@ -4,14 +4,12 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <!-- 纯图片，包含所有文字和色块 -->
     <ImageView
         android:id="@+id/iv_week_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
 
-    <!-- 顶部透明按钮层（只用来接收点击事件） -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,12 +18,13 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp">
 
-        <View
+        <!-- 把 View 换成了 TextView -->
+        <TextView
             android:id="@+id/btn_prev_week"
             android:layout_width="40dp"
             android:layout_height="40dp" />
 
-        <View
+        <TextView
             android:id="@+id/btn_next_week"
             android:layout_width="40dp"
             android:layout_height="40dp"
