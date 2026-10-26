@@ -17,6 +17,9 @@ class WeekWidget : AppWidgetProvider() {
         } else if (intent.action == "ACTION_WEEK_NEXT") {
             WidgetDataStore.addWeekOffset(context, 1)
             updateAll(context)
+        } else if (intent.action == "ACTION_WEEK_TODAY") {
+            WidgetDataStore.setWeekOffset(context, 0) // 重置为 0
+            updateAll(context)
         }
     }
 
@@ -49,7 +52,6 @@ class WeekWidget : AppWidgetProvider() {
                 val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
                 views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
             } catch (e: Exception) {
-                // 如果画图崩溃，显示一张纯白图片兜底，防止白圈
                 val empty = Bitmap.createBitmap(widthPx, heightPx, Bitmap.Config.ARGB_8888)
                 views.setImageViewBitmap(R.id.iv_week_canvas, empty)
             }
@@ -57,6 +59,10 @@ class WeekWidget : AppWidgetProvider() {
             val prevIntent = Intent(context, WeekWidget::class.java).apply { action = "ACTION_WEEK_PREV" }
             val prevPending = PendingIntent.getBroadcast(context, 1, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.btn_prev_week, prevPending)
+
+            val todayIntent = Intent(context, WeekWidget::class.java).apply { action = "ACTION_WEEK_TODAY" }
+            val todayPending = PendingIntent.getBroadcast(context, 4, todayIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.btn_today_week, todayPending)
 
             val nextIntent = Intent(context, WeekWidget::class.java).apply { action = "ACTION_WEEK_NEXT" }
             val nextPending = PendingIntent.getBroadcast(context, 2, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
