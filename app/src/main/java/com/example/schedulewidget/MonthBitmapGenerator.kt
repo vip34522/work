@@ -3,6 +3,7 @@ package com.example.schedulewidget
 import android.graphics.*
 import org.json.JSONObject
 import java.util.*
+import kotlin.math.ceil
 
 object MonthBitmapGenerator {
 
@@ -35,7 +36,7 @@ object MonthBitmapGenerator {
         val weekNames = listOf("一", "二", "三", "四", "五", "六", "日")
         val contentW = w - paddingX * 2
         val cellW = contentW / 7f
-        val weekHeaderH = h * 0.10f // 顶部星期留白
+        val weekHeaderH = h * 0.08f 
         
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.textSize = Math.min(cellW * 0.35f, 30f)
@@ -48,19 +49,21 @@ object MonthBitmapGenerator {
         }
 
         val gridStartY = weekHeaderH
-        val gridHeight = h - gridStartY
-        val rows = 6
-        val cellH = gridHeight / rows
-
+        // 【核心修复】去掉底部原本减去的 10f，让空间全部给网格
+        val gridHeight = h - gridStartY 
+        
         val firstDay = Calendar.getInstance().apply { set(year, month - 1, 1) }
         val startPad = if (firstDay.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) 6 else firstDay.get(Calendar.DAY_OF_WEEK) - 2
         val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        val actualRows = ceil((startPad + daysInMonth) / 7.0).toInt()
+        val cellH = gridHeight / actualRows 
 
         val todayCal = Calendar.getInstance()
         val isCurrentMonth = (todayCal.get(Calendar.YEAR) == year && todayCal.get(Calendar.MONTH) + 1 == month)
         val todayD = todayCal.get(Calendar.DAY_OF_MONTH)
 
-        for (r in 0 until rows) {
+        for (r in 0 until actualRows) {
             for (c in 0 until 7) {
                 val dayIndex = r * 7 + c - startPad
                 if (dayIndex < 0 || dayIndex >= daysInMonth) continue
@@ -74,48 +77,57 @@ object MonthBitmapGenerator {
                 val right = left + cellW
                 val bottom = top + cellH
 
-                // 画格子边框
                 paint.style = Paint.Style.STROKE
-                paint.strokeWidth = 2f
+                paint.strokeWidth = 1.5f
                 paint.color = Color.parseColor("#BFDBFE")
-                rectF.set(left + 2f, top + 2f, right - 2f, bottom - 2f)
-                canvas.drawRoundRect(rectF, 8f, 8f, paint)
+                // 底部稍微减去 2f，防止边框贴死屏幕边缘被切
+                rectF.set(left + 2f, top + 2f, right - 2f, bottom - 2f) 
+                canvas.drawRoundRect(rectF, 10f, 10f, paint)
 
                 if (isToday) {
                     paint.style = Paint.Style.FILL
                     paint.color = Color.parseColor("#DBEAFE")
-                    canvas.drawRoundRect(rectF, 8f, 8f, paint)
+                    canvas.drawRoundRect(rectF, 10f, 10f, paint)
                 }
 
                 textPaint.textAlign = Paint.Align.LEFT
-                textPaint.textSize = Math.min(cellW * 0.25f, cellH * 0.25f)
-                if (textPaint.textSize > 28f) textPaint.textSize = 28f
+                textPaint.textSize = Math.min(cellW * 0.28f, cellH * 0.28f)
+                if (textPaint.textSize > 32f) textPaint.textSize = 32f
                 textPaint.color = Color.parseColor("#1E293B")
                 textPaint.isFakeBoldText = true
-                canvas.drawText(d.toString(), left + 8f, top + 8f + textPaint.textSize, textPaint)
+                // Y 坐标稍微上提，避免压到底部
+                canvas.drawText(d.toString(), left + 10f, top + 8f + textPaint.textSize, textPaint)
 
                 val holiday = LunarCalc.getHoliday(date)
                 val lunar = LunarCalc.lunarShort(date)
                 textPaint.textAlign = Paint.Align.RIGHT
-                textPaint.textSize = Math.min(cellW * 0.18f, cellH * 0.18f)
-                if (textPaint.textSize > 22f) textPaint.textSize = 22f
+                textPaint.textSize = Math.min(cellW * 0.2f, cellH * 0.2f)
+                if (textPaint.textSize > 24f) textPaint.textSize = 24f
                 textPaint.isFakeBoldText = false
                 textPaint.color = Color.parseColor(if (holiday != null) "#EF4444" else "#94A3B8")
-                canvas.drawText(if (holiday != null) holiday else lunar, right - 8f, top + 8f + textPaint.textSize, textPaint)
+                canvas.drawText(if (holiday != null) holiday else lunar, right - 10f, top + 8f + textPaint.textSize, textPaint)
 
                 val shift = if (data != null && me != null) ShiftCalc.calcShift(data, me, date) else null
                 val shiftStr = ShiftCalc.shiftShort(shift)
                 if (shiftStr != "—") {
                     textPaint.textAlign = Paint.Align.CENTER
-                    textPaint.textSize = Math.min(cellW * 0.4f, cellH * 0.4f)
+                    textPaint.textSize = Math.min(cellW * 0.45f, cellH * 0.4f)
                     if (textPaint.textSize > 40f) textPaint.textSize = 40f
                     textPaint.color = Color.parseColor(getShiftColor(shiftStr))
                     textPaint.isFakeBoldText = true
-                    canvas.drawText(shiftStr, left + cellW / 2f, getCenteredY(bottom - cellH * 0.25f, textPaint), textPaint)
+                    // 【核心修复】把班次文字上提一点点（0.3f 改 0.35f），保证到底部有缓冲，绝不切字
+                    canvas.drawText(shiftStr, left + cellW / 2f, getCenteredY(bottom - cellH * 0.35f, textPaint), textPaint)
                 }
             }
         }
         return bitmap
     }
-    private fun getShiftColor(shiftStr: String): String = when(shiftStr) { "休" -> "#EF4444"; "白" -> "#3B82F6"; "夜" -> "#1E293B"; "二" -> "#10B981"; else -> "#F59E0B" }
+    
+    private fun getShiftColor(shiftStr: String): String = when(shiftStr) { 
+        "休" -> "#EF4444"
+        "白" -> "#3B82F6"
+        "夜" -> "#1E293B"
+        "二" -> "#10B981" 
+        else -> "#F59E0B" 
+    }
 }
