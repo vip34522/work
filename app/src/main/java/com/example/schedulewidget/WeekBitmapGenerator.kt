@@ -176,7 +176,7 @@ object WeekBitmapGenerator {
         return bitmap
     }
 
-    private fun getShiftColor(shiftStr: String): String = when(shiftStr) { "休" -> "#EF4444"; "白" -> "#3B82F6"; "夜" -> "#1E293B"; "二" -> "#0EA5E9"; else -> "#10B981" }
+    private fun getShiftColor(shiftStr: String): String = when(shiftStr) { "休" -> "#EF4444"; "白" -> "#3B82F6"; "夜" -> "#1E293B"; "二" -> "#10B981"; else -> "#F59E0B" }
     private fun getTypeName(data: JSONObject, typeId: String): String {
         val types = data.optJSONArray("shiftTypes") ?: return "排班"
         for (i in 0 until types.length()) { if (types.getJSONObject(i).optString("id") == typeId) return types.getJSONObject(i).optString("name") }
