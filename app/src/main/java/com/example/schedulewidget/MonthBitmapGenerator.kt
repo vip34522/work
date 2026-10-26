@@ -22,7 +22,8 @@ object MonthBitmapGenerator {
         val h = height.toFloat()
         val radius = 20f
         val borderW = 4f
-        val headerH = Math.min(h * 0.12f, 70f)
+        // 【修改】月视图顶部栏加高：占高度的 18%，且不低于 80f
+        val headerH = Math.max(h * 0.18f, 80f)
         val paddingX = w * 0.04f
 
         fun getCenteredY(centerY: Float, paint: Paint): Float {
@@ -30,7 +31,6 @@ object MonthBitmapGenerator {
             return centerY - (fm.ascent + fm.descent) / 2f
         }
 
-        // 背景与圆角
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         canvas.drawRoundRect(0f, 0f, w, h, radius, radius, paint)
@@ -45,37 +45,33 @@ object MonthBitmapGenerator {
         paint.color = Color.parseColor("#5C8DF6")
         canvas.drawRoundRect(borderW/2, borderW/2, w - borderW/2, h - borderW/2, radius, radius, paint)
 
-        // 顶部文字和图标
         textPaint.color = Color.WHITE
-        textPaint.textSize = headerH * 0.4f
+        textPaint.textSize = headerH * 0.35f
         textPaint.isFakeBoldText = true
         textPaint.textAlign = Paint.Align.LEFT
         canvas.drawText(title, paddingX, getCenteredY(headerH / 2f, textPaint), textPaint)
 
-        // 顶部中间大标题 (如 2026年10月)
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.textSize = headerH * 0.4f
         canvas.drawText("${year}年${month}月", w / 2f, getCenteredY(headerH / 2f, textPaint), textPaint)
 
-        // 画图标占位
-        val iconSize = headerH * 0.6f
+        // 【修改】箭头加大
+        val iconSize = headerH * 0.5f
         val iconY = headerH / 2f
         val nextX = w - paddingX - iconSize / 2f
         paint.style = Paint.Style.FILL
         paint.color = Color.parseColor("#40FFFFFF")
         rectF.set(nextX - iconSize/2f, iconY - iconSize/2f, nextX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 8f, 8f, paint)
-        val prevX = nextX - iconSize * 1.5f
+        canvas.drawRoundRect(rectF, 10f, 10f, paint)
+        val prevX = nextX - iconSize - 10f
         rectF.set(prevX - iconSize/2f, iconY - iconSize/2f, prevX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 8f, 8f, paint)
-        // 只需画三角形箭头即可
-        val pathRight = Path().apply { moveTo(nextX - 10f, iconY - 12f); lineTo(nextX + 10f, iconY); lineTo(nextX - 10f, iconY + 12f); close() }
+        canvas.drawRoundRect(rectF, 10f, 10f, paint)
+        val pathRight = Path().apply { moveTo(nextX - iconSize*0.2f, iconY - iconSize*0.25f); lineTo(nextX + iconSize*0.2f, iconY); lineTo(nextX - iconSize*0.2f, iconY + iconSize*0.25f); close() }
         paint.color = Color.WHITE
         canvas.drawPath(pathRight, paint)
-        val pathLeft = Path().apply { moveTo(prevX + 10f, iconY - 12f); lineTo(prevX - 10f, iconY); lineTo(prevX + 10f, iconY + 12f); close() }
+        val pathLeft = Path().apply { moveTo(prevX + iconSize*0.2f, iconY - iconSize*0.25f); lineTo(prevX - iconSize*0.2f, iconY); lineTo(prevX + iconSize*0.2f, iconY + iconSize*0.25f); close() }
         canvas.drawPath(pathLeft, paint)
 
-        // 画星期表头
         val weekNames = listOf("一", "二", "三", "四", "五", "六", "日")
         val contentW = w - paddingX * 2
         val cellW = contentW / 7f
@@ -89,10 +85,9 @@ object MonthBitmapGenerator {
             canvas.drawText(weekNames[i], cx, getCenteredY(headerH + weekHeaderH / 2f, textPaint), textPaint)
         }
 
-        // 画日历网格
         val gridStartY = headerH + weekHeaderH
         val gridHeight = h - gridStartY - 10f
-        val rows = 6 // 固定画6行
+        val rows = 6
         val cellH = gridHeight / rows
 
         val firstDay = Calendar.getInstance().apply { set(year, month - 1, 1) }
@@ -117,28 +112,24 @@ object MonthBitmapGenerator {
                 val right = left + cellW
                 val bottom = top + cellH
 
-                // 画边框 (浅蓝色)
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.color = Color.parseColor("#BFDBFE")
                 rectF.set(left + 2f, top + 2f, right - 2f, bottom - 2f)
                 canvas.drawRoundRect(rectF, 8f, 8f, paint)
 
-                // 今天的高亮底色
                 if (isToday) {
                     paint.style = Paint.Style.FILL
                     paint.color = Color.parseColor("#DBEAFE")
                     canvas.drawRoundRect(rectF, 8f, 8f, paint)
                 }
 
-                // 日期数字
                 textPaint.textAlign = Paint.Align.LEFT
                 textPaint.textSize = Math.min(cellW * 0.25f, 30f)
                 textPaint.color = Color.parseColor("#1E293B")
                 textPaint.isFakeBoldText = true
                 canvas.drawText(d.toString(), left + 8f, top + 10f + textPaint.textSize, textPaint)
 
-                // 农历或节日
                 val holiday = LunarCalc.getHoliday(date)
                 val lunar = LunarCalc.lunarShort(date)
                 textPaint.textAlign = Paint.Align.RIGHT
@@ -148,7 +139,6 @@ object MonthBitmapGenerator {
                 val lunarTxt = if (holiday != null) holiday else lunar
                 canvas.drawText(lunarTxt, right - 8f, top + 10f + textPaint.textSize, textPaint)
 
-                // 班次
                 val shift = if (data != null && me != null) ShiftCalc.calcShift(data, me, date) else null
                 val shiftStr = ShiftCalc.shiftShort(shift)
                 if (shiftStr != "—") {
