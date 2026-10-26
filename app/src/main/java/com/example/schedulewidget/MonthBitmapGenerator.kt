@@ -22,7 +22,6 @@ object MonthBitmapGenerator {
         val h = height.toFloat()
         val radius = 20f
         val borderW = 4f
-        // 【修改】月视图顶部栏加高：占高度的 18%，且不低于 80f
         val headerH = Math.max(h * 0.18f, 80f)
         val paddingX = w * 0.04f
 
@@ -31,6 +30,7 @@ object MonthBitmapGenerator {
             return centerY - (fm.ascent + fm.descent) / 2f
         }
 
+        // 背景
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         canvas.drawRoundRect(0f, 0f, w, h, radius, radius, paint)
@@ -45,38 +45,52 @@ object MonthBitmapGenerator {
         paint.color = Color.parseColor("#5C8DF6")
         canvas.drawRoundRect(borderW/2, borderW/2, w - borderW/2, h - borderW/2, radius, radius, paint)
 
+        // 【优化】顶部：标题在左，按钮包着日期在中间
         textPaint.color = Color.WHITE
-        textPaint.textSize = headerH * 0.35f
+        textPaint.textSize = Math.min(headerH * 0.3f, 36f)
         textPaint.isFakeBoldText = true
         textPaint.textAlign = Paint.Align.LEFT
         canvas.drawText(title, paddingX, getCenteredY(headerH / 2f, textPaint), textPaint)
 
+        val dateStr = "${year}年${month}月"
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.textSize = headerH * 0.4f
-        canvas.drawText("${year}年${month}月", w / 2f, getCenteredY(headerH / 2f, textPaint), textPaint)
+        textPaint.textSize = Math.min(headerH * 0.28f, 32f) // 日期比名字稍小
+        val dateW = textPaint.measureText(dateStr)
+        val dateCenterX = w / 2f
+        canvas.drawText(dateStr, dateCenterX, getCenteredY(headerH / 2f, textPaint), textPaint)
 
-        // 【修改】箭头加大
-        val iconSize = headerH * 0.5f
+        // 绘制按钮
+        val btnW = 48f
+        val btnH = 36f
+        val gap = 12f
         val iconY = headerH / 2f
-        val nextX = w - paddingX - iconSize / 2f
-        paint.style = Paint.Style.FILL
-        paint.color = Color.parseColor("#40FFFFFF")
-        rectF.set(nextX - iconSize/2f, iconY - iconSize/2f, nextX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 10f, 10f, paint)
-        val prevX = nextX - iconSize - 10f
-        rectF.set(prevX - iconSize/2f, iconY - iconSize/2f, prevX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 10f, 10f, paint)
-        val pathRight = Path().apply { moveTo(nextX - iconSize*0.2f, iconY - iconSize*0.25f); lineTo(nextX + iconSize*0.2f, iconY); lineTo(nextX - iconSize*0.2f, iconY + iconSize*0.25f); close() }
-        paint.color = Color.WHITE
-        canvas.drawPath(pathRight, paint)
-        val pathLeft = Path().apply { moveTo(prevX + iconSize*0.2f, iconY - iconSize*0.25f); lineTo(prevX - iconSize*0.2f, iconY); lineTo(prevX + iconSize*0.2f, iconY + iconSize*0.25f); close() }
-        canvas.drawPath(pathLeft, paint)
+        val prevX = dateCenterX - dateW / 2f - btnW / 2f - gap
+        val nextX = dateCenterX + dateW / 2f + btnW / 2f + gap
 
+        fun drawBtn(cx: Float, isPrev: Boolean) {
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#40FFFFFF")
+            rectF.set(cx - btnW/2f, iconY - btnH/2f, cx + btnW/2f, iconY + btnH/2f)
+            canvas.drawRoundRect(rectF, 8f, 8f, paint)
+            val path = Path()
+            if (isPrev) {
+                path.moveTo(cx + 4f, iconY - 8f); path.lineTo(cx - 4f, iconY); path.lineTo(cx + 4f, iconY + 8f)
+            } else {
+                path.moveTo(cx - 4f, iconY - 8f); path.lineTo(cx + 4f, iconY); path.lineTo(cx - 4f, iconY + 8f)
+            }
+            path.close()
+            paint.color = Color.WHITE
+            canvas.drawPath(path, paint)
+        }
+        drawBtn(prevX, true)
+        drawBtn(nextX, false)
+
+        // 表格头部（星期）
         val weekNames = listOf("一", "二", "三", "四", "五", "六", "日")
         val contentW = w - paddingX * 2
         val cellW = contentW / 7f
-        val weekHeaderH = h * 0.08f
-        textPaint.textSize = weekHeaderH * 0.6f
+        val weekHeaderH = h * 0.1f // 【优化】加高留白
+        textPaint.textSize = Math.min(cellW * 0.35f, 28f)
         textPaint.color = Color.parseColor("#64748B")
         textPaint.isFakeBoldText = true
 
@@ -85,8 +99,9 @@ object MonthBitmapGenerator {
             canvas.drawText(weekNames[i], cx, getCenteredY(headerH + weekHeaderH / 2f, textPaint), textPaint)
         }
 
+        // 画网格
         val gridStartY = headerH + weekHeaderH
-        val gridHeight = h - gridStartY - 10f
+        val gridHeight = h - gridStartY - 15f // 【优化】减小底部留白
         val rows = 6
         val cellH = gridHeight / rows
 
@@ -124,29 +139,32 @@ object MonthBitmapGenerator {
                     canvas.drawRoundRect(rectF, 8f, 8f, paint)
                 }
 
+                // 【核心修复】日期大小受格宽和格高的双重限制，防止拉宽变大
                 textPaint.textAlign = Paint.Align.LEFT
-                textPaint.textSize = Math.min(cellW * 0.25f, 30f)
+                textPaint.textSize = Math.min(cellW * 0.25f, cellH * 0.25f) 
+                if (textPaint.textSize > 28f) textPaint.textSize = 28f // 绝对上限
                 textPaint.color = Color.parseColor("#1E293B")
                 textPaint.isFakeBoldText = true
-                canvas.drawText(d.toString(), left + 8f, top + 10f + textPaint.textSize, textPaint)
+                canvas.drawText(d.toString(), left + 8f, top + 8f + textPaint.textSize, textPaint)
 
                 val holiday = LunarCalc.getHoliday(date)
                 val lunar = LunarCalc.lunarShort(date)
                 textPaint.textAlign = Paint.Align.RIGHT
-                textPaint.textSize = Math.min(cellW * 0.18f, 22f)
+                textPaint.textSize = Math.min(cellW * 0.18f, cellH * 0.18f)
+                if (textPaint.textSize > 22f) textPaint.textSize = 22f
                 textPaint.isFakeBoldText = false
                 textPaint.color = Color.parseColor(if (holiday != null) "#EF4444" else "#94A3B8")
-                val lunarTxt = if (holiday != null) holiday else lunar
-                canvas.drawText(lunarTxt, right - 8f, top + 10f + textPaint.textSize, textPaint)
+                canvas.drawText(if (holiday != null) holiday else lunar, right - 8f, top + 8f + textPaint.textSize, textPaint)
 
                 val shift = if (data != null && me != null) ShiftCalc.calcShift(data, me, date) else null
                 val shiftStr = ShiftCalc.shiftShort(shift)
                 if (shiftStr != "—") {
                     textPaint.textAlign = Paint.Align.CENTER
-                    textPaint.textSize = Math.min(cellW * 0.4f, 40f)
+                    textPaint.textSize = Math.min(cellW * 0.4f, cellH * 0.4f)
+                    if (textPaint.textSize > 40f) textPaint.textSize = 40f
                     textPaint.color = Color.parseColor(getShiftColor(shiftStr))
                     textPaint.isFakeBoldText = true
-                    canvas.drawText(shiftStr, left + cellW / 2f, getCenteredY(bottom - cellH * 0.35f, textPaint), textPaint)
+                    canvas.drawText(shiftStr, left + cellW / 2f, getCenteredY(bottom - cellH * 0.25f, textPaint), textPaint)
                 }
             }
         }
