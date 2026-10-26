@@ -42,8 +42,8 @@ class WeekWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 这里由 48 改为 36，因为蓝条变窄了
-            val heightPx = ((minHeight - 36) * density).toInt()
+            // 去掉了 -36f，因为顶部蓝条已经由画布接管了
+            val heightPx = (minHeight * density).toInt()
 
             val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, data, me, offset)
 
