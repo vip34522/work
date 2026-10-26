@@ -41,14 +41,13 @@ class MonthWidget : AppWidgetProvider() {
             var minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
             var minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
             
-            if (minWidth <= 0) minWidth = 300
-            if (minHeight <= 0) minHeight = 300
+            if (minWidth <= 0) minWidth = 320
+            // 【核心修复】如果系统给的高度小于 380，强制设为 380，保证 6 行绝不被挤压
+            if (minHeight < 380) minHeight = 380 
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 减去顶部 56dp
             var heightPx = ((minHeight - 56) * density).toInt()
-            if (heightPx < 10) heightPx = 10
 
             try {
                 val bitmap = MonthBitmapGenerator.generateMonthBitmap(widthPx, heightPx, data, me, offset)
