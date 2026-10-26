@@ -4,51 +4,31 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <!-- 底层：画布 -->
+    <!-- 纯图片，包含所有文字和色块 -->
     <ImageView
         android:id="@+id/iv_week_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
 
-    <!-- 顶层：透明文字与按钮 -->
+    <!-- 顶部透明按钮层（只用来接收点击事件） -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="end|center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp">
 
-        <TextView
-            android:id="@+id/tv_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="排班系统"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
+        <View
             android:id="@+id/btn_prev_week"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/bg_btn_trans"
-            android:gravity="center"
-            android:text="◀"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
 
-        <TextView
+        <View
             android:id="@+id/btn_next_week"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/bg_btn_trans"
-            android:gravity="center"
-            android:text="▶"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 </FrameLayout>
