@@ -22,7 +22,6 @@ object WeekBitmapGenerator {
         val h = height.toFloat()
         val radius = 20f
         val borderW = 4f
-        // 【修改】顶部栏加高：占高度的 25%，且不低于 70f
         val headerH = Math.max(h * 0.25f, 70f)
         val paddingX = w * 0.05f
 
@@ -31,7 +30,7 @@ object WeekBitmapGenerator {
             return centerY - (fm.ascent + fm.descent) / 2f
         }
 
-        // 1. 画背景和边框
+        // 画背景和边框
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
         canvas.drawRoundRect(0f, 0f, w, h, radius, radius, paint)
@@ -46,47 +45,40 @@ object WeekBitmapGenerator {
         paint.color = Color.parseColor("#5C8DF6")
         canvas.drawRoundRect(borderW/2, borderW/2, w - borderW/2, h - borderW/2, radius, radius, paint)
 
-        // 2. 画顶部文字与按钮
+        // 绘制顶部按钮
+        val btnW = 44f
+        val btnH = 34f
+        val gap = 12f
+        val iconY = headerH / 2f
+        val nextX = w - paddingX - btnW / 2f
+        val todayX = nextX - btnW - gap
+        val prevX = todayX - btnW - gap
+
+        fun drawBtn(cx: Float, text: String) {
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#40FFFFFF")
+            rectF.set(cx - btnW/2f, iconY - btnH/2f, cx + btnW/2f, iconY + btnH/2f)
+            canvas.drawRoundRect(rectF, 8f, 8f, paint)
+            textPaint.color = Color.WHITE
+            textPaint.textSize = 14f
+            textPaint.textAlign = Paint.Align.CENTER
+            textPaint.isFakeBoldText = true
+            canvas.drawText(text, cx, getCenteredY(iconY, textPaint), textPaint)
+        }
+
+        drawBtn(prevX, "◀")
+        drawBtn(todayX, "今天")
+        drawBtn(nextX, "▶")
+
+        // 绘制标题
         textPaint.color = Color.WHITE
-        textPaint.textSize = headerH * 0.35f // 标题字体加大
+        textPaint.textSize = headerH * 0.3f
         textPaint.isFakeBoldText = true
         textPaint.textAlign = Paint.Align.LEFT
-        canvas.drawText(title, paddingX, getCenteredY(headerH / 2f, textPaint), textPaint)
+        canvas.drawText(title, paddingX, getCenteredY(iconY, textPaint), textPaint)
 
-        // 【修改】箭头图标加大
-        val iconSize = headerH * 0.45f
-        val iconY = headerH / 2f
-        val gap = 10f
-        
-        val nextX = w - paddingX - iconSize / 2f
-        paint.style = Paint.Style.FILL
-        paint.color = Color.parseColor("#40FFFFFF")
-        rectF.set(nextX - iconSize/2f, iconY - iconSize/2f, nextX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 10f, 10f, paint)
-        val nextPath = Path().apply {
-            moveTo(nextX - iconSize*0.15f, iconY - iconSize*0.2f)
-            lineTo(nextX + iconSize*0.15f, iconY)
-            lineTo(nextX - iconSize*0.15f, iconY + iconSize*0.2f)
-            close()
-        }
-        paint.color = Color.WHITE
-        canvas.drawPath(nextPath, paint)
-
-        val prevX = nextX - iconSize - gap
-        paint.color = Color.parseColor("#40FFFFFF")
-        rectF.set(prevX - iconSize/2f, iconY - iconSize/2f, prevX + iconSize/2f, iconY + iconSize/2f)
-        canvas.drawRoundRect(rectF, 10f, 10f, paint)
-        val prevPath = Path().apply {
-            moveTo(prevX + iconSize*0.15f, iconY - iconSize*0.2f)
-            lineTo(prevX - iconSize*0.15f, iconY)
-            lineTo(prevX + iconSize*0.15f, iconY + iconSize*0.2f)
-            close()
-        }
-        paint.color = Color.WHITE
-        canvas.drawPath(prevPath, paint)
-
-        // 3. 画日历区 (高度会相应减小)
-        val topH = headerH + (h - headerH) * 0.48f
+        // 画日历区
+        val topH = headerH + (h - headerH) * 0.45f
         val contentW = w - paddingX * 2
         val cellW = contentW / 7f
         val areaH = topH - headerH
@@ -139,7 +131,7 @@ object WeekBitmapGenerator {
         paint.color = Color.parseColor("#E2E8F0")
         canvas.drawRect(paddingX, topH, w - paddingX, topH + 2f, paint)
 
-        // 4. 画底部详情
+        // 画底部详情
         val botStartY = topH + 2f
         val botH = h - botStartY
         val leftW = contentW * 0.32f
@@ -170,14 +162,16 @@ object WeekBitmapGenerator {
         paint.strokeWidth = 2f
         canvas.drawLine(paddingX + leftW, botStartY + 12f, paddingX + leftW, h - 15f, paint)
 
+        // 【优化】人员列表：字号加大，列距缩小，两边加宽
         val personsToShow = getTodayPersons(data)
         val showCount = Math.min(personsToShow.size, 3)
         val listRowH = Math.min(botH / 3.2f, 55f)
         val listStartY = botStartY + (botH - showCount * listRowH) / 2f + listRowH / 2f
-        val rightStartX = paddingX + leftW + 12f
+        
+        val rightStartX = paddingX + leftW + 8f // 左边距同步放宽（缩进了8f）
         val colNameX = rightStartX
-        val colTypeX = rightStartX + (w * 0.20f)
-        val colBadgeRight = w - paddingX
+        val colTypeX = rightStartX + (w * 0.18f) // 缩小班种列距
+        val colBadgeRight = w - paddingX - 8f // 右边距同步放宽
 
         var count = 0
         for (p in personsToShow) {
@@ -198,12 +192,12 @@ object WeekBitmapGenerator {
             textPaint.textAlign = Paint.Align.LEFT
             textPaint.color = Color.parseColor("#2563EB")
             textPaint.isFakeBoldText = true
-            textPaint.textSize = Math.min(listRowH * 0.45f, 36f)
+            textPaint.textSize = Math.min(listRowH * 0.5f, 38f) // 名字加大
             canvas.drawText(pName, colNameX, getCenteredY(rowCenterY, textPaint), textPaint)
 
             textPaint.color = Color.parseColor("#64748B")
             textPaint.isFakeBoldText = false
-            textPaint.textSize = Math.min(listRowH * 0.35f, 26f)
+            textPaint.textSize = Math.min(listRowH * 0.4f, 28f) // 班种加大
             canvas.drawText(typeName, colTypeX, getCenteredY(rowCenterY, textPaint), textPaint)
 
             val badgeW = Math.min(w * 0.12f, 45f)
