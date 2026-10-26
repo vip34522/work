@@ -4,22 +4,50 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="8dp">
 
-    <TextView
+    <!-- 顶部标题栏和翻页按钮 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="排班周视图"
-        android:textColor="#1E293B"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp">
 
-    <TextView
-        android:id="@+id/tv_week_html"
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="排班周视图"
+            android:textColor="#1E293B"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btn_prev_week"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="◀"
+            android:textColor="#2563EB"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/btn_next_week"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="▶"
+            android:textColor="#2563EB"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- 用来显示 Canvas 画出来的图片 -->
+    <ImageView
+        android:id="@+id/iv_week_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:textColor="#1E293B"
-        android:textSize="13sp"
-        android:lineSpacingExtra="6dp" />
+        android:layout_marginTop="8dp"
+        android:scaleType="fitXY" />
 </LinearLayout>
