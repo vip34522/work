@@ -17,6 +17,9 @@ class MonthWidget : AppWidgetProvider() {
         } else if (intent.action == "ACTION_MONTH_NEXT") {
             WidgetDataStore.addMonthOffset(context, 1)
             updateAll(context)
+        } else if (intent.action == "ACTION_MONTH_TODAY") {
+            WidgetDataStore.setMonthOffset(context, 0)
+            updateAll(context)
         }
     }
 
@@ -56,6 +59,10 @@ class MonthWidget : AppWidgetProvider() {
             val prevIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_PREV" }
             val prevPending = PendingIntent.getBroadcast(context, 11, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.btn_prev_month, prevPending)
+
+            val todayIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_TODAY" }
+            val todayPending = PendingIntent.getBroadcast(context, 14, todayIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.btn_today_month, todayPending)
 
             val nextIntent = Intent(context, MonthWidget::class.java).apply { action = "ACTION_MONTH_NEXT" }
             val nextPending = PendingIntent.getBroadcast(context, 12, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
