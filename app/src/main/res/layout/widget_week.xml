@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
 
-    <!-- 拦截区域加高到 80dp -->
+    <!-- 拦截区域加高到 80dp，三个按键平铺 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -18,15 +18,20 @@
         android:orientation="horizontal"
         android:paddingHorizontal="12dp">
 
-        <!-- 点击区放大到 60dp -->
         <TextView
             android:id="@+id/btn_prev_week"
-            android:layout_width="60dp"
+            android:layout_width="48dp"
             android:layout_height="60dp" />
 
         <TextView
-            android:id="@+id/btn_next_week"
+            android:id="@+id/btn_today_week"
             android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="4dp" />
+
+        <TextView
+            android:id="@+id/btn_next_week"
+            android:layout_width="48dp"
             android:layout_height="60dp"
             android:layout_marginStart="4dp" />
     </LinearLayout>
