@@ -42,11 +42,10 @@ class WeekWidget : AppWidgetProvider() {
 
             val density = context.resources.displayMetrics.density
             val widthPx = (minWidth * density).toInt()
-            // 去掉了 -36f，因为顶部蓝条已经由画布接管了
             val heightPx = (minHeight * density).toInt()
 
+            // 这里传入“排班系统”文字，以后想改直接在引号里改即可
             val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
-// (注："排班系统"就是图片上显示的标题，你以后想改直接在这里改就行)
 
             views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
 
@@ -61,8 +60,9 @@ class WeekWidget : AppWidgetProvider() {
 
             val openIntent = Intent(context, MainActivity::class.java)
             val openPending = PendingIntent.getActivity(context, 3, openIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            
+            // 点击画布打开 App (删除了 tv_header 的点击绑定)
             views.setOnClickPendingIntent(R.id.iv_week_canvas, openPending)
-            views.setOnClickPendingIntent(R.id.tv_header, openPending)
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
