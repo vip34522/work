@@ -45,7 +45,8 @@ class WeekWidget : AppWidgetProvider() {
             // 去掉了 -36f，因为顶部蓝条已经由画布接管了
             val heightPx = (minHeight * density).toInt()
 
-            val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, data, me, offset)
+            val bitmap = WeekBitmapGenerator.generateWeekBitmap(widthPx, heightPx, "排班系统", data, me, offset)
+// (注："排班系统"就是图片上显示的标题，你以后想改直接在这里改就行)
 
             views.setImageViewBitmap(R.id.iv_week_canvas, bitmap)
 
