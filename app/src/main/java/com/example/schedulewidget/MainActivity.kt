@@ -10,7 +10,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
-import android.webkit.* // 确保这里包含了所有 webkit 包
+import android.webkit.*
+import android.webkit.WebView.HitTestResult // <--- 加上这一行解决报错
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
 
-    // 用于接收网页点击“上传头像”后返回的文件
     private val fileChooserLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (filePathCallback == null) return@registerForActivityResult
         var results: Array<Uri>? = null
@@ -46,13 +46,10 @@ class MainActivity : AppCompatActivity() {
         webView = WebView(this).apply {
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-            // 允许长按
             isLongClickable = true
             setOnLongClickListener { 
                 val result = hitTestResult
-                // 这里用到了 HitTestResult，上面必须导入
                 if (result.type == HitTestResult.IMAGE_TYPE || result.type == HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-                    // 如果长按的是图片，触发保存逻辑
                     saveImage(result.extra)
                     true
                 } else {
@@ -67,9 +64,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onPageFinished(view: WebView, url: String) { injectHook(view) }
             }
 
-            // 重写 WebChromeClient，解决弹窗、选文件等问题
             webChromeClient = object : WebChromeClient() {
-                // 1. 允许网页弹出 confirm 提示框（解决清空数据、删除点击无效）
                 override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
                     AlertDialog.Builder(this@MainActivity)
                         .setTitle("提示")
@@ -81,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                     return true
                 }
 
-                // 2. 允许网页弹出 alert 提示
                 override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
                     AlertDialog.Builder(this@MainActivity)
                         .setTitle("提示")
@@ -92,7 +86,6 @@ class MainActivity : AppCompatActivity() {
                     return true
                 }
 
-                // 3. 解决“上传头像”点击没反应
                 override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
                     this@MainActivity.filePathCallback?.onReceiveValue(null)
                     this@MainActivity.filePathCallback = filePathCallback
@@ -111,19 +104,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            // 注意：如果你现在做的是“情书月记”，请把下面的文件名改成 qingshu.html
             loadUrl("https://appassets.androidplatform.net/assets/schedule.html")
         }
         setContentView(webView)
     }
 
-    // 长按保存图片功能（兼容 Base64 图片）
     private fun saveImage(imageUrl: String?) {
         if (imageUrl == null) return
         try {
             var bitmap: Bitmap? = null
             if (imageUrl.startsWith("data:image")) {
-                // 处理网页生成的 Base64 图片
                 val base64Data = imageUrl.substringAfter(",")
                 val decodedBytes = Base64.decode(base64Data, Base64.DEFAULT)
                 bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
@@ -138,7 +128,6 @@ class MainActivity : AppCompatActivity() {
                 out.flush()
                 out.close()
                 
-                // 通知相册刷新
                 MediaStore.Images.Media.insertImage(contentResolver, file.absolutePath, filename, "排班导出图片")
                 Toast.makeText(this, "图片已保存到相册！", Toast.LENGTH_SHORT).show()
             }
