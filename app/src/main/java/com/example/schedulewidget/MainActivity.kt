@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             (function(){
               if (window.__bridgeHooked) return;
               window.__bridgeHooked = true;
-              const KEY = 'multi_shift_v34';
+              const KEY = 'multi_shift_v35';
               const orig = Storage.prototype.setItem;
               Storage.prototype.setItem = function(k, v){
                 orig.call(this, k, v);
